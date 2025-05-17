@@ -1,28 +1,26 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { HttpClient, HttpHeaders, HttpClientModule } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { SessionService } from './core/services/session.service';
+import { MovieGridComponent } from './modules/movie-grid/movie-grid.component';
+import { getPopularMovies } from './data/api/movie-api';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, HttpClientModule],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  standalone: true,
+  imports: [MovieGridComponent],
+  templateUrl: './app.component.html'
 })
-export class AppComponent {
-  title = 'test-vw';
+export class AppComponent implements OnInit {
+  movieIds: string[] = [];
 
-  constructor(private http: HttpClient) {}
+  constructor(private session: SessionService, private http: HttpClient) {}
 
-  getImdbData() {
-    const url = 'https://imdb236.p.rapidapi.com/api/imdb/top250-movies';
-    const headers = new HttpHeaders({
-      'x-rapidapi-key': 'd04abcadacmsh0cafe8734fabf71p140b6bjsn55e53eacb038',
-      'x-rapidapi-host': 'imdb236.p.rapidapi.com'
-    });
+  async ngOnInit() {
+    await this.session.initSession();
+    const token = this.session.getToken();
+    if (!token) return;
+    const movies = await getPopularMovies(this.http, token);
+    this.movieIds = movies.map((movie: any) => String(movie.id));
 
-    this.http.get(url, { headers }).subscribe(
-      response => console.log(response),
-      error => console.error(error)
-    );
   }
 }

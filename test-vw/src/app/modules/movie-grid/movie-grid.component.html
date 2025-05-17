@@ -1,0 +1,8 @@
+<div class="grid">
+    <h1>Movie Posters</h1> 
+    <div *ngIf="postersWithTitles.length === 0">No posters found.</div>
+   <div class="poster-container" *ngFor="let poster of postersWithTitles">
+    <img [src]="poster.url" alt="Movie Poster" />
+    <div class="poster-title">{{ poster.title }}</div>
+  </div>
+</div>
