@@ -1,0 +1,20 @@
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  justify-content: center;
+}
+
+.grid-anim-wrapper {
+  transition: transform 0.4s cubic-bezier(.77,0,.18,1);
+  will-change: transform;
+}
+
+.slide-left {
+  transform: translateX(-100vw);
+}
+
+.slide-right {
+  transform: translateX(100vw);
+}

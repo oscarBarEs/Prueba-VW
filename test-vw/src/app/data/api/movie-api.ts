@@ -21,8 +21,8 @@ export const getChangedMovieIds = async (http: HttpClient, token: string): Promi
   return (response?.results ?? []).map((item: any) => String(item.id));
 };
 
-export const getPopularMovies = async (http: HttpClient, token: string): Promise<any[]> => {
-  const url = 'https://api.themoviedb.org/3/movie/popular?language=en-US&page=1';
+export const getPopularMovies = async (http: HttpClient, token: string,page:string): Promise<any[]> => {
+  const url = `https://api.themoviedb.org/3/movie/popular?language=en-US&page=${page}`;
   const headers = new HttpHeaders({
     'Authorization': token,
     'accept': 'application/json'

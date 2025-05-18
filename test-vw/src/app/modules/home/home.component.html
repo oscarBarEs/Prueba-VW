@@ -1,2 +1,23 @@
-<h1>Películas</h1>
-<app-movie-grid [movieIds]="movieIds"></app-movie-grid>
+<h1 class="fs-4 text-center">Películas más populares</h1>
+<span class="d-block text-center mb-3">Página {{ page }} / {{ maxPage }}</span>
+<div class="d-flex align-items-center justify-content-center w-100" style="max-width: 100vw;">
+  <button 
+    class="btn btn-outline-secondary me-1 flex-shrink-0" 
+    (click)="prevPage()" 
+    aria-label="Anterior"
+    style="height: 40px; width: 40px; min-width: 40px; min-height: 40px; font-size: 1.2rem;"
+  >&#8592;</button>
+  <div 
+    [ngClass]="{'slide-left': animDirection === 'left', 'slide-right': animDirection === 'right'}" 
+    class="grid-anim-wrapper flex-grow-1"
+    style="overflow-x: auto; max-width: 80vw; "
+  >
+    <app-movie-grid [movieIds]="movieIds"></app-movie-grid>
+  </div>
+  <button 
+    class="btn btn-outline-secondary ms-1 flex-shrink-0" 
+    (click)="nextPage()" 
+    aria-label="Siguiente"
+    style="height: 40px; width: 40px; min-width: 40px; min-height: 40px; font-size: 1.2rem;"
+  >&#8594;</button>
+</div>

@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { getMovieInfo } from '../../data/api/movie-api';
 import { SessionService } from '../../core/services/session.service';
 import { RouterModule } from '@angular/router';
+import { MoviePosterComponent } from '../movie-poster/movie-poster.component';
 
 
 @Component({
@@ -11,7 +12,7 @@ import { RouterModule } from '@angular/router';
   templateUrl: './movie-grid.component.html',
   styleUrls: ['./movie-grid.component.css'],
   standalone: true,
-imports: [CommonModule, RouterModule]
+imports: [CommonModule, RouterModule, MoviePosterComponent]
 })
 
 export class MovieGridComponent implements OnChanges {
