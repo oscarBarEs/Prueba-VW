@@ -16,7 +16,9 @@ export class HomeComponent implements OnInit {
   movieIds: string[] = [];
   page = 1;
   maxPage = 5;
-  animDirection: 'left' | 'right' | null = null;
+  animating = false;
+
+  private moviesCache: { [page: number]: string[] } = {};
 
   constructor(private session: SessionService, private http: HttpClient) {}
 
@@ -26,27 +28,33 @@ export class HomeComponent implements OnInit {
   }
 
   async loadMovies() {
+    if (this.moviesCache[this.page]) {
+      this.movieIds = this.moviesCache[this.page];
+      return;
+    }
     const token = this.session.getToken();
     if (!token) return;
     const movies = await getPopularMovies(this.http, token, String(this.page));
-    this.movieIds = movies.map((movie: any) => String(movie.id));
+    const ids = movies.map((movie: any) => String(movie.id));
+    this.moviesCache[this.page] = ids;
+    this.movieIds = ids;
   }
 
   async nextPage() {
-    this.animDirection = 'left';
-    this.page = this.page === this.maxPage ? 1 : this.page + 1;
+    this.animating = true;
     setTimeout(async () => {
+      this.page = this.page === this.maxPage ? 1 : this.page + 1;
       await this.loadMovies();
-      this.animDirection = null;
-    }, 400); // Duración de la animación
+      this.animating = false;
+    }, 400);
   }
 
   async prevPage() {
-    this.animDirection = 'right';
-    this.page = this.page === 1 ? this.maxPage : this.page - 1;
+    this.animating = true;
     setTimeout(async () => {
+      this.page = this.page === 1 ? this.maxPage : this.page - 1;
       await this.loadMovies();
-      this.animDirection = null;
-    }, 400); // Duración de la animación
+      this.animating = false;
+    }, 400);
   }
 }

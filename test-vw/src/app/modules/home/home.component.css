@@ -1,20 +1,21 @@
-.controls {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
-  justify-content: center;
-}
-
 .grid-anim-wrapper {
-  transition: transform 0.4s cubic-bezier(.77,0,.18,1);
-  will-change: transform;
+  position: relative;
+  min-height: 140px;
 }
 
-.slide-left {
-  transform: translateX(-100vw);
+.carousel-fade {
+  opacity: 0;
+  transition: opacity 0.4s;
+  pointer-events: none;
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
 }
 
-.slide-right {
-  transform: translateX(100vw);
+.carousel-show {
+  opacity: 1;
+  transition: opacity 0.4s;
+  pointer-events: auto;
+  position: relative;
 }

@@ -1,15 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { SessionService } from './core/services/session.service';
-import { MovieGridComponent } from './modules/movie-grid/movie-grid.component';
-import { getPopularMovies } from './data/api/movie-api';
-import { HttpClient } from '@angular/common/http';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router'; 
-
+import { HeaderComponent } from './layout/header/header.component';
+import { FooterComponent } from './layout/footer/footer.component';
 // app.component.ts
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet,HeaderComponent, FooterComponent],
   templateUrl: './app.component.html'
 })
 export class AppComponent {}

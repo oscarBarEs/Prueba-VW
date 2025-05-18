@@ -7,12 +7,10 @@
     aria-label="Anterior"
     style="height: 40px; width: 40px; min-width: 40px; min-height: 40px; font-size: 1.2rem;"
   >&#8592;</button>
-  <div 
-    [ngClass]="{'slide-left': animDirection === 'left', 'slide-right': animDirection === 'right'}" 
-    class="grid-anim-wrapper flex-grow-1"
-    style="overflow-x: auto; max-width: 80vw; "
-  >
-    <app-movie-grid [movieIds]="movieIds"></app-movie-grid>
+  <div class="grid-anim-wrapper flex-grow-1" style="overflow-x: auto; max-width: 80vw; min-height: 140px;">
+    <div [ngClass]="{ 'carousel-fade': animating, 'carousel-show': !animating }">
+      <app-movie-grid [movieIds]="movieIds"></app-movie-grid>
+    </div>
   </div>
   <button 
     class="btn btn-outline-secondary ms-1 flex-shrink-0" 
