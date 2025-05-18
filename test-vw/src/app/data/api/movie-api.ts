@@ -31,3 +31,27 @@ export const getPopularMovies = async (http: HttpClient, token: string): Promise
   // El array de películas populares está en response.results
   return response?.results ?? [];
 };
+
+export const getMovieRecommendations = async (http: HttpClient, token: string, movieId: string): Promise<any[]> => {
+  const url = `https://api.themoviedb.org/3/movie/${movieId}/recommendations?language=en-US&page=1`;
+  const headers = new HttpHeaders({
+    'Authorization': token,
+    'accept': 'application/json'
+  });
+  const response: any = await http.get(url, { headers }).toPromise();
+  return response?.results ?? [];
+};
+
+export const searchMovieBySlug = async (http: HttpClient, token: string, slug: string): Promise<any | null> => {
+  const url = `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(slug.replace(/-/g, ' '))}&language=en-US&page=1`;
+  const headers = new HttpHeaders({
+    'Authorization': token,
+    'accept': 'application/json'
+  });
+  const response: any = await http.get(url, { headers }).toPromise();
+  // Busca la coincidencia exacta por slug
+  return (response?.results ?? []).find((m: any) =>
+    m.title && m.title.replace(/\s+/g, '-').toLowerCase() === slug
+  ) || null;
+};
+
