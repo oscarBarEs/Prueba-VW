@@ -17,24 +17,41 @@ export class HomeComponent implements OnInit {
   page = 1;
   maxPage = 5;
   animating = false;
+  token: string | null = null;
+  loading = true; // Add this
+
 
   private moviesCache: { [page: number]: string[] } = {};
 
-  constructor(private session: SessionService, private http: HttpClient) {}
+  constructor(private http: HttpClient, private session: SessionService) {}
+// HomeComponent
+async ngOnInit() {
+  this.loading = true;
 
-  async ngOnInit() {
-    await this.session.initSession();
+  try {
+    this.token = await this.session.getTokenAsync();
+
+    if (!this.token) {
+      console.warn('No token found');
+      return;
+    }
+
     await this.loadMovies();
+  } catch (err) {
+    console.error('Error loading movies', err);
+  } finally {
+    this.loading = false;
   }
+}
 
+  
   async loadMovies() {
     if (this.moviesCache[this.page]) {
       this.movieIds = this.moviesCache[this.page];
       return;
     }
-    const token = this.session.getToken();
-    if (!token) return;
-    const movies = await getPopularMovies(this.http, token, String(this.page));
+    if (!this.token) return;
+    const movies = await getPopularMovies(this.http, this.token, String(this.page));
     const ids = movies.map((movie: any) => String(movie.id));
     this.moviesCache[this.page] = ids;
     this.movieIds = ids;
@@ -57,4 +74,10 @@ export class HomeComponent implements OnInit {
       this.animating = false;
     }, 400);
   }
+
+  async onPageChange(page: number) {
+    this.page = page;
+    await this.loadMovies();
+  }
+
 }

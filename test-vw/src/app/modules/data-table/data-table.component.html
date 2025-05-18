@@ -1,0 +1,61 @@
+<div class="container py-4">
+  <h2>Lista de Películas</h2>
+  <div class="mb-3">
+    <button class="btn btn-outline-primary btn-sm me-1"
+      [class.active]="currentSort === 'popularity.desc'"
+      (click)="orderBy('popularity.desc')">
+      Popularidad
+    </button>
+  </div>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Poster</th>
+        <th (click)="toggleSort('title')" style="cursor:pointer;">
+          Título
+          <span *ngIf="currentSort.startsWith('title')">
+            <span *ngIf="currentSort.endsWith('.asc')">&#9650;</span>
+            <span *ngIf="currentSort.endsWith('.desc')">&#9660;</span>
+          </span>
+        </th>
+        <th>Genero/s</th>
+        <th (click)="toggleSort('release_date')" style="cursor:pointer;">
+          Fecha
+          <span *ngIf="currentSort.startsWith('release_date')">
+            <span *ngIf="currentSort.endsWith('.asc')">&#9650;</span>
+            <span *ngIf="currentSort.endsWith('.desc')">&#9660;</span>
+          </span>
+        </th>
+        <th (click)="toggleSort('vote_average')" style="cursor:pointer;">
+          Rating
+          <span *ngIf="currentSort.startsWith('vote_average')">
+            <span *ngIf="currentSort.endsWith('.asc')">&#9650;</span>
+            <span *ngIf="currentSort.endsWith('.desc')">&#9660;</span>
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let movie of movies">
+        <td>
+          <a [routerLink]="['/movie', movie.id]" class="d-block position-relative">
+            <img
+              [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
+              alt="Movie Poster"
+              class="img-fluid rounded"
+              style="height: 5rem; object-fit: cover;"
+            />
+          </a>
+        </td>
+        <td>{{ movie.title }}</td>
+        <td>
+          <ng-container *ngFor="let genre of movie.genre_ids; let last = last">
+            {{ genresMap[genre] }}<span *ngIf="!last">, </span>
+          </ng-container>
+        </td>
+        <td>{{ movie.release_date }}</td>
+        <td>{{ movie.vote_average }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -9,17 +9,25 @@ export class SessionService {
 
   constructor(private http: HttpClient) {}
 
-  async initSession() {
+  async initSession(): Promise<void> {
+    if (this.tokenSubject.value) return; // evitar doble inicialización
+
     const url = 'https://api.themoviedb.org/3/authentication/guest_session/new';
     const headers = new HttpHeaders({
-      'Authorization': BASE_TOKEN,
-      'accept': 'application/json'
+      Authorization: BASE_TOKEN,
+      accept: 'application/json',
     });
-    await firstValueFrom(this.http.get(url, { headers }));
-    this.tokenSubject.next(BASE_TOKEN);
+
+    try {
+      await firstValueFrom(this.http.get(url, { headers }));
+      this.tokenSubject.next(BASE_TOKEN);
+    } catch (err) {
+      console.error('Error inicializando sesión', err);
+      this.tokenSubject.next(null);
+    }
   }
 
-  getToken(): string | null {
-    return this.tokenSubject.value;
+  getTokenAsync(): Promise<string | null> {
+    return firstValueFrom(this.tokenSubject.asObservable());
   }
 }

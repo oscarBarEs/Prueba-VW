@@ -1,15 +1,21 @@
+<div *ngIf="loading" class="text-center w-100">
+  <p>Cargando películas...</p>
+</div>
+
 <div
+  *ngIf="!loading && postersWithTitles.length > 0"
   class="d-flex flex-row flex-nowrap overflow-auto"
   style="gap: 1rem;"
 >
-  <div
-    *ngFor="let poster of postersWithTitles"
-    style="min-width: 50px;"  
-  >
+  <div *ngFor="let poster of postersWithTitles" style="min-width: 50px;">
     <app-movie-poster
       [id]="poster.id"
       [posterUrl]="poster.url"
       [title]="poster.title"
     ></app-movie-poster>
   </div>
+</div>
+
+<div *ngIf="!loading && postersWithTitles.length === 0" class="text-center w-100">
+  <p>No hay resultados para mostrar.</p>
 </div>
