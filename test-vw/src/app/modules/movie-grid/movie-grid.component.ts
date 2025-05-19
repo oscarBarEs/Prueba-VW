@@ -5,7 +5,7 @@ import { getMovieInfo } from '../../data/api/movie-api';
 import { SessionService } from '../../core/services/session.service';
 import { RouterModule } from '@angular/router';
 import { MoviePosterComponent } from '../movie-poster/movie-poster.component';
-
+// ...existing code...
 @Component({
   selector: 'app-movie-grid',
   templateUrl: './movie-grid.component.html',
@@ -15,6 +15,8 @@ import { MoviePosterComponent } from '../movie-poster/movie-poster.component';
 })
 export class MovieGridComponent implements OnInit, OnChanges {
   @Input() movieIds: string[] = [];
+  @Input() mode: 'row' | 'grid' = 'row';
+
   postersWithTitles: { id: string, url: string, title: string }[] = [];
   token: string | null = null;
   loading = false;
@@ -23,7 +25,7 @@ export class MovieGridComponent implements OnInit, OnChanges {
 
 // MovieGridComponent
 async ngOnInit() {
-  this.token = await this.session.getTokenAsync();
+  this.token = await this.session.getToken();
   if (this.movieIds.length > 0 && this.token) {
     await this.loadPosters();
   }

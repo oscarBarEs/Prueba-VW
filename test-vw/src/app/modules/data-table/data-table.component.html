@@ -1,4 +1,4 @@
-<div class="container py-4">
+<div class="container ">
   <h2>Lista de Películas</h2>
   <div class="mb-3">
     <button class="btn btn-outline-primary btn-sm me-1"
@@ -7,7 +7,23 @@
       Popularidad
     </button>
   </div>
+
+    <nav class="d-flex justify-content-center mt-3">
+    <ul class="pagination">
+      <li class="page-item" [class.disabled]="currenntPageNumber === 1">
+        <button class="page-link" (click)="changePage(currenntPageNumber - 1)" [disabled]="currenntPageNumber === 1">Anterior</button>
+      </li>
+      <li class="page-item disabled">
+        <span class="page-link">Página {{ currentPage }}</span>
+      </li>
+      <li class="page-item">
+        <button class="page-link" (click)="changePage(currenntPageNumber + 1)">Siguiente</button>
+      </li>
+    </ul>
+  </nav>
+
   <table class="table table-striped">
+    <!-- ...existing table code... -->
     <thead>
       <tr>
         <th>Poster</th>
@@ -58,4 +74,18 @@
       </tr>
     </tbody>
   </table>
+
+  <nav class="d-flex justify-content-center mt-3">
+    <ul class="pagination">
+      <li class="page-item" [class.disabled]="currenntPageNumber === 1">
+        <button class="page-link" (click)="changePage(currenntPageNumber - 1)" [disabled]="currenntPageNumber === 1">Anterior</button>
+      </li>
+      <li class="page-item disabled">
+        <span class="page-link">Página {{ currentPage }}</span>
+      </li>
+      <li class="page-item">
+        <button class="page-link" (click)="changePage(currenntPageNumber + 1)">Siguiente</button>
+      </li>
+    </ul>
+  </nav>
 </div>

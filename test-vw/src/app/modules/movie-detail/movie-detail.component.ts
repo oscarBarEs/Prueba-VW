@@ -28,7 +28,7 @@ export class MovieDetailComponent implements OnInit {
 
 
 async ngOnInit() {
-  this.token = await this.session.getTokenAsync();
+  this.token = await this.session.getToken();
 
   this.sub = this.route.paramMap
     .pipe(

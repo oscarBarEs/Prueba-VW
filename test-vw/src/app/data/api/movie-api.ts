@@ -12,8 +12,8 @@ export const getMovieInfo = (http: HttpClient, token: string, movieId: string): 
 };
 
 
-export const getChangedMovieIds = async (http: HttpClient, token: string): Promise<string[]> => {
-  const url = 'https://api.themoviedb.org/3/movie/changes?page=1';
+export const getTopMovies = async (http: HttpClient, token: string): Promise<string[]> => {
+  const url = 'https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=vote_average.desc&without_genres=99,10755&vote_count.gte=200';
   const headers = new HttpHeaders({
     'Authorization': token,
     'accept': 'application/json'
@@ -22,6 +22,8 @@ export const getChangedMovieIds = async (http: HttpClient, token: string): Promi
   // El array de cambios está en response.results y cada objeto tiene un id numérico
   return (response?.results ?? []).map((item: any) => String(item.id));
 };
+
+
 
 export const getPopularMovies = async (http: HttpClient, token: string,page:string): Promise<any[]> => {
   const url = `https://api.themoviedb.org/3/movie/popular?language=en-US&page=${page}`;
@@ -63,7 +65,7 @@ export const discoverMovies = async (
   page: string = '1',
   sortBy: string = 'popularity.desc'
 ): Promise<any[]> => {
-  const url = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=${sortBy}`;
+  const url = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=${sortBy}&vote_count.gte=150`;
   const headers = new HttpHeaders({
     'Authorization': token,
     'accept': 'application/json'

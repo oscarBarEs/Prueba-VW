@@ -16,20 +16,23 @@ export class DataTableComponent implements OnInit {
   genresMap: { [id: number]: string } = {};
   currentSort: string = 'popularity.desc';
   token: string | null = null;
+  currentPage = "1";
+  currenntPageNumber = 1;
+
   constructor(private http: HttpClient, private session: SessionService) {}
   async ngOnInit() {
-    this.token = await this.session.getTokenAsync();
+    this.token = await this.session.getToken();
     if (!this.token) {return};
     this.genresMap = await getGenresMap(this.http, this.token);
 
-    this.movies =  await discoverMovies(this.http, this.token, '1', 'popularity.desc');
+    this.movies =  await discoverMovies(this.http, this.token, this.currentPage, 'popularity.desc');
     console.log(this.movies);
 }
   async orderBy(sort: string) {
     this.currentSort = sort;
 
     if (!this.token) return;
-    this.movies = await discoverMovies(this.http, this.token, '1', sort);
+    this.movies = await discoverMovies(this.http, this.token, this.currentPage, sort);
   }
 
   async toggleSort(field: string) {
@@ -38,8 +41,17 @@ export class DataTableComponent implements OnInit {
     direction = this.currentSort.endsWith('.desc') ? 'asc' : 'desc';
   }
   this.currentSort = `${field}.${direction}`;
-  const token = this.session.getTokenAsync();
+  const token = this.session.getToken();
+    this.currentPage = "1";
+    this.currenntPageNumber = 1;
   if (!this.token) return;
-  this.movies = await discoverMovies(this.http, this.token, '1', this.currentSort);
+  this.movies = await discoverMovies(this.http, this.token, this.currentPage, this.currentSort);
 }
+  async changePage(page: number) {
+    if (page < 1) return;
+    this.currentPage = page.toString();
+    this.currenntPageNumber = page;
+    if (!this.token) return;
+    this.movies = await discoverMovies(this.http, this.token, this.currentPage.toString(), this.currentSort);
+  }
 }

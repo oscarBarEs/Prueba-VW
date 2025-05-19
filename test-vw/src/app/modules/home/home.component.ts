@@ -1,25 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { MovieGridComponent } from '../movie-grid/movie-grid.component';
 import { SessionService } from '../../core/services/session.service';
-import { getPopularMovies } from '../../data/api/movie-api';
+import { getPopularMovies,getTopMovies } from '../../data/api/movie-api';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { MoviePosterComponent } from '../movie-poster/movie-poster.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, MovieGridComponent],
+  imports: [CommonModule, MovieGridComponent,MoviePosterComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
   movieIds: string[] = [];
+  topMovieIds: string[] = [];
   page = 1;
   maxPage = 5;
   animating = false;
   token: string | null = null;
   loading = true; // Add this
+  poster: { id: string, url: string, title: string } ={id: "", url: "", title: ""}; ;
 
+  posterUrl = 'https://image.tmdb.org/t/p/w500';
 
   private moviesCache: { [page: number]: string[] } = {};
 
@@ -29,7 +33,7 @@ async ngOnInit() {
   this.loading = true;
 
   try {
-    this.token = await this.session.getTokenAsync();
+    this.token = await this.session.getToken();
 
     if (!this.token) {
       console.warn('No token found');
@@ -37,6 +41,8 @@ async ngOnInit() {
     }
 
     await this.loadMovies();
+    await this.loadTopMovies();
+    await this.getPoster();
   } catch (err) {
     console.error('Error loading movies', err);
   } finally {
@@ -55,6 +61,33 @@ async ngOnInit() {
     const ids = movies.map((movie: any) => String(movie.id));
     this.moviesCache[this.page] = ids;
     this.movieIds = ids;
+  }
+  async loadTopMovies() {
+    if (!this.token) return;
+    const topMovies = await getTopMovies(this.http, this.token);
+    this.topMovieIds = topMovies;
+  }
+
+  async getPoster() {
+    if (!this.token) return;
+    //generate random number btween 6 and 30
+    const randomNumber = Math.floor(Math.random() * (30 - 6 + 1)) + 6;
+
+    const movies = await getPopularMovies(this.http, this.token, String(randomNumber));
+
+    //get a random movie from the list
+    const randomMovie = movies[Math.floor(Math.random() * movies.length)];
+    if (randomMovie) {
+    const imagePath = randomMovie.backdrop_path ? randomMovie.backdrop_path : randomMovie.poster_path;
+
+      this.poster = {
+        id: randomMovie.id,
+        url: this.posterUrl + imagePath,
+        title: randomMovie.title
+      };
+    }
+
+
   }
 
   async nextPage() {
