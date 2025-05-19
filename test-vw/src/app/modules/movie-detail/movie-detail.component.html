@@ -1,13 +1,49 @@
-<div *ngIf="notFound">Movie not found.</div>
-<div *ngIf="!notFound && !movie">Loading...</div>
-<div *ngIf="movie">
-  <h2>{{ movie.title }}</h2>
-  <img *ngIf="movie.poster_path" [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path" alt="Poster" />
-  <p>{{ movie.overview }}</p>
-  <p><strong>Release date:</strong> {{ movie.release_date }}</p>
-  <p><strong>Rating:</strong> {{ movie.vote_average }}</p>
-</div>
-<div *ngIf="recommendations.length > 0">
-  <h3>Recommended Movies</h3>
-  <app-movie-grid [movieIds]="recommendations"></app-movie-grid>
+<div class="container py-4">
+  <div *ngIf="notFound" class="alert alert-danger text-center">Movie not found.</div>
+  <div *ngIf="!notFound && !movie" class="text-center py-5">
+    <div class="spinner-border" role="status"></div>
+    <div>Loading...</div>
+  </div>
+  <div *ngIf="movie">
+    <div class="row align-items-start">
+      <div class="col-12 col-md-4 mb-3 mb-md-0 text-center">
+        <img *ngIf="movie.poster_path" [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path" alt="Poster" class="img-fluid rounded shadow" />
+      </div>
+      <div class="col-12 col-md-8">
+        <h2 class="mb-3">{{ movie.title }}</h2>
+        <p class="mb-3">{{ movie.overview }}</p>
+        <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item"><strong>Release date:</strong> {{ movie.release_date }}</li>
+            <li class="list-group-item" *ngIf="movie.budget && movie.budget > 0">
+              <strong>Budget:</strong>
+              {{
+                movie.budget >= 1_000_000
+                  ? ((movie.budget / 1_000_000) | number:'1.1-1':'en-US') + 'M'
+                  : (movie.budget >= 1_000
+                      ? ((movie.budget / 1_000) | number:'1.1-1':'en-US') + 'K'
+                      : movie.budget)
+              }}
+            </li>
+
+            <li class="list-group-item" *ngIf="movie.revenue && movie.revenue > 0">
+              <strong>Revenue:</strong>
+              {{
+                movie.revenue >= 1_000_000
+                  ? ((movie.revenue / 1_000_000) | number:'1.1-1':'en-US') + 'M'
+                  : (movie.revenue >= 1_000
+                      ? ((movie.revenue / 1_000) | number:'1.1-1':'en-US') + 'K'
+                      : movie.revenue)
+              }}
+            </li>
+
+
+          <li class="list-group-item"><strong>Rating:</strong> {{ movie.vote_average | number:'1.1-1':'en-US' }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="recommendations.length > 0" class="mt-5">
+    <h3 class="mb-3">Recommended Movies</h3>
+    <app-movie-grid [movieIds]="recommendations"></app-movie-grid>
+  </div>
 </div>

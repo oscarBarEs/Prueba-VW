@@ -5,7 +5,7 @@
 <div
   *ngIf="!loading && postersWithTitles.length > 0 && mode === 'row'"
   class="d-flex flex-row flex-nowrap overflow-auto "
-  style="gap: 1rem; padding: 1rem;"
+  style="gap: 1rem;padding: 1rem;justify-content: center;"
 >
   <div *ngFor="let poster of postersWithTitles" 
   class="col-4 col-md-1 col-lg-1"
@@ -22,7 +22,6 @@
 <div
   *ngIf="!loading && postersWithTitles.length > 0 && mode === 'grid'"
   class="row align-items-center w-100"
-  style="gap: 1rem; padding: 1rem;"
 >
   <div class="col-6 col-md-2 col-lg-2"  *ngFor="let poster of postersWithTitles">
     <app-movie-poster

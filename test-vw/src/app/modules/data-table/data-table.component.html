@@ -1,25 +1,37 @@
 <div class="container ">
   <h2>Data Table</h2>
-  <div class="mb-3">
-    <div class="row g-2">
-      <div class="col-12 col-md-auto">
-        <button class="btn btn-outline-primary btn-sm w-100"
-          [class.active]="currentSort === 'popularity.desc'"
-          (click)="orderBy('popularity.desc')">
-          Popularidad
-        </button>
-      </div>
-      <div class="col-12 col-md">
-        <input class="form-control"
-          type="search"
-          placeholder="Search"
-          aria-label="Search"
-          [(ngModel)]="searchTerm"
-          name="searchTerm"
-          (change)="onSearchInput()" />
-      </div>
+<div class="mb-3">
+  <div class="row g-1">
+    <div class="col-12 col-md-2">
+      <input class="form-control"
+        type="search"
+        placeholder="Year"
+        aria-label="Year"
+        [(ngModel)]="searchByYear"
+        name="searchByYear"
+        (change)="onSearchInput()" />
     </div>
+    <div class="col-6 col-md-1">
+      <input class="form-control"
+        type="number"
+        placeholder="Min Rating"
+        aria-label="Min Rating"
+        [(ngModel)]="voteAverageGte"
+        name="voteAverageGte"
+        (change)="onSearchInput()" />
+    </div>
+    <div class="col-6 col-md-1">
+      <input class="form-control"
+        type="number"
+        placeholder="Max Rating"
+        aria-label="Max Rating"
+        [(ngModel)]="voteAverageLte"
+        name="voteAverageLte"
+        (change)="onSearchInput()" />
+    </div>
+
   </div>
+</div>
   <!-- Spinner Bootstrap mientras carga -->
   <div *ngIf="loading" class="d-flex justify-content-center align-items-center py-5">
     <div class="spinner-border" role="status" aria-label="Loading"></div>
@@ -89,7 +101,7 @@
               </ng-container>
             </td>
             <td>{{ movie.release_date }}</td>
-            <td>{{ movie.vote_average }}</td>
+            <td>{{ movie.vote_average | number:'1.1-1':'en-US' }} </td>
           </tr>
         </tbody>
       </table>

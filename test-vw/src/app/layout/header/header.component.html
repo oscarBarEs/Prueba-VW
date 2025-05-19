@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
+<nav class="navbar navbar-expand-lg bg-body-tertiary position-relative">
   <div class="container-fluid">
     <a class="navbar-brand" routerLink="/">API TMDB</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -12,17 +12,36 @@
         <li class="nav-item">
           <a class="nav-link" [routerLink]="['data-table']" routerLinkActive="active">Data Table</a>
         </li>
-       <!-- Boton para cambiar el theme de Dark a Light-->
         <li class="nav-item">
           <button class="btn btn-sm btn-secondary ms-2" (click)="toggleTheme()">
             <span *ngIf="isDarkMode; else sun">&#9790;</span>
-          <ng-template #sun>&#9728;</ng-template>
-        </button>
+            <ng-template #sun>&#9728;</ng-template>
+          </button>
         </li>
-        
-
       </ul>
-
+      <form class="d-flex position-relative" role="search" autocomplete="off" (submit)="$event.preventDefault()">
+        <input class="form-control me-2"
+          type="search"
+          placeholder="Search"
+          aria-label="Search"
+          [(ngModel)]="searchTerm"
+          name="headerSearch"
+          (input)="onSearchInput()" />
+        <button class="btn btn-outline-success" type="submit">Search</button>
+        <div *ngIf="searchTerm && searchResults.length > 0" class="position-absolute bg-white border rounded shadow w-100 mt-2" style="z-index: 1000; left: 0; top: 100%;">
+          <ul class="list-group list-group-flush">
+            <li *ngFor="let movie of searchResults" class="list-group-item list-group-item-action" (click)="goToMovie(movie.id)" style="cursor:pointer;">
+              <span *ngIf="movie.poster_path">
+                <img [src]="'https://image.tmdb.org/t/p/w92' + movie.poster_path" alt="" style="height: 32px; width: 22px; object-fit: cover; margin-right: 8px;">
+              </span>
+              {{ movie.title }} <span class="text-muted small" *ngIf="movie.release_date">({{ movie.release_date | slice:0:4 }})</span>
+            </li>
+          </ul>
+        </div>
+        <div *ngIf="searching" class="position-absolute bg-white border rounded shadow w-100 mt-2 text-center py-2" style="z-index: 1000; left: 0; top: 100%;">
+          <div class="spinner-border spinner-border-sm" role="status"></div>
+        </div>
+      </form>
     </div>
   </div>
 </nav>

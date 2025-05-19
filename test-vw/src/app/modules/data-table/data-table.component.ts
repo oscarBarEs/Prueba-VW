@@ -19,8 +19,9 @@ export class DataTableComponent implements OnInit {
   token: string | null = null;
   currentPage = "1";
   currenntPageNumber = 1;
-  searchTerm: string = '';
   searchByYear: string = '';
+  voteAverageGte: string = '';
+  voteAverageLte: string = '';
 
   loading = false;
 
@@ -32,7 +33,15 @@ export class DataTableComponent implements OnInit {
     if (!this.token) {return};
     this.genresMap = await getGenresMap(this.http, this.token);
 
-    this.movies =  await discoverMovies(this.http, this.token, this.currentPage, 'popularity.desc');
+    this.movies = await discoverMovies(
+      this.http,
+      this.token,
+      this.currentPage,
+      this.currentSort,
+      this.voteAverageGte,
+      this.voteAverageLte,
+      this.searchByYear
+    );
     console.log(this.movies);
     this.loading = false;
 
@@ -42,24 +51,44 @@ export class DataTableComponent implements OnInit {
 
     if (!this.token) return;
     this.loading = true;
-    this.movies = await discoverMovies(this.http, this.token, this.currentPage, sort);
+    this.movies = await discoverMovies(
+      this.http,
+      this.token,
+      this.currentPage,
+      this.currentSort,
+      this.voteAverageGte,
+      this.voteAverageLte,
+      this.searchByYear
+    );
+    
     this.loading = false;
   }
 
-  async toggleSort(field: string) {
-  let direction = 'desc';
-  if (this.currentSort.startsWith(field)) {
-    direction = this.currentSort.endsWith('.desc') ? 'asc' : 'desc';
+async toggleSort(field: string) {
+  // Ciclo: popular.desc -> field.asc -> field.desc -> popular.desc ...
+  if (this.currentSort === 'popularity.desc') {
+    this.currentSort = `${field}.asc`;
+  } else if (this.currentSort === `${field}.asc`) {
+    this.currentSort = `${field}.desc`;
+  } else if (this.currentSort === `${field}.desc`) {
+    this.currentSort = 'popularity.desc';
+  } else {
+    this.currentSort = `${field}.asc`;
   }
-  this.currentSort = `${field}.${direction}`;
-  const token = this.session.getToken();
-    this.currentPage = "1";
-    this.currenntPageNumber = 1;
+  this.currentPage = "1";
+  this.currenntPageNumber = 1;
   if (!this.token) return;
   this.loading = true;
-  this.movies = await discoverMovies(this.http, this.token, this.currentPage, this.currentSort);
-  this.loading = false;
-
+    this.movies = await discoverMovies(
+      this.http,
+      this.token,
+      this.currentPage,
+      this.currentSort,
+      this.voteAverageGte,
+      this.voteAverageLte,
+      this.searchByYear
+    );
+    this.loading = false;
 }
   async changePage(page: number) {
     if (page < 1) return;
@@ -68,12 +97,17 @@ export class DataTableComponent implements OnInit {
     if (!this.token) return;
     
     this.loading = true;
-    if (this.searchTerm.trim()) {
-      this.movies = await searchMovies(this.http, this.token, this.searchTerm, this.searchByYear, this.currentPage);
-    }
-    else {
-    this.movies = await discoverMovies(this.http, this.token, this.currentPage.toString(), this.currentSort);
-    }
+
+    this.movies = await discoverMovies(
+      this.http,
+      this.token,
+      this.currentPage,
+      this.currentSort,
+      this.voteAverageGte,
+      this.voteAverageLte,
+      this.searchByYear
+    );
+        
     this.loading = false;
   }
 
@@ -84,11 +118,17 @@ export class DataTableComponent implements OnInit {
       this.currenntPageNumber = 1;
           this.loading = true;
 
-      if (this.searchTerm.trim()) {
-        this.movies = await searchMovies(this.http, this.token, this.searchTerm, this.searchByYear, this.currentPage);
-      } else {
-        this.movies = await discoverMovies(this.http, this.token, this.currentPage, this.currentSort);
-      }
+
+    this.movies = await discoverMovies(
+      this.http,
+      this.token,
+      this.currentPage,
+      this.currentSort,
+      this.voteAverageGte,
+      this.voteAverageLte,
+      this.searchByYear
+    );
+          
           this.loading = false;
 
     }
@@ -96,13 +136,16 @@ export class DataTableComponent implements OnInit {
   async onSearchInput() {
   if (!this.token) return;
     this.loading = true;
-
-  if (this.searchTerm.trim()) {
-    this.movies = await searchMovies(this.http, this.token, this.searchTerm, this.searchByYear, this.currentPage);
-  } else {
-    this.movies = await discoverMovies(this.http, this.token, this.currentPage, this.currentSort);
-  }
-      this.loading = false;
+    this.movies = await discoverMovies(
+      this.http,
+      this.token,
+      this.currentPage,
+      this.currentSort,
+      this.voteAverageGte,
+      this.voteAverageLte,
+      this.searchByYear
+    );
+        this.loading = false;
 
 }
 }

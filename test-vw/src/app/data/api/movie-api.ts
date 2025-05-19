@@ -63,9 +63,23 @@ export const discoverMovies = async (
   http: HttpClient,
   token: string,
   page: string = '1',
-  sortBy: string = 'popularity.desc'
+  sortBy: string = 'popularity.desc',
+  voteAverageGte: string = '',
+  voteAverageLte: string = '',
+  year: string = ''
 ): Promise<any[]> => {
-  const url = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=${sortBy}&vote_count.gte=150`;
+  let url = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=${sortBy}&vote_count.gte=150`;
+
+  if (voteAverageGte) {
+    url += `&vote_average.gte=${voteAverageGte}`;
+  }
+  if (voteAverageLte) {
+    url += `&vote_average.lte=${voteAverageLte}`;
+  }
+  if (year) {
+    url += `&primary_release_year=${year}`;
+  }
+
   const headers = new HttpHeaders({
     'Authorization': token,
     'accept': 'application/json'
