@@ -1,91 +1,112 @@
 <div class="container ">
-  <h2>Lista de Películas</h2>
+  <h2>Data Table</h2>
   <div class="mb-3">
-    <button class="btn btn-outline-primary btn-sm me-1"
-      [class.active]="currentSort === 'popularity.desc'"
-      (click)="orderBy('popularity.desc')">
-      Popularidad
-    </button>
+    <div class="row g-2">
+      <div class="col-12 col-md-auto">
+        <button class="btn btn-outline-primary btn-sm w-100"
+          [class.active]="currentSort === 'popularity.desc'"
+          (click)="orderBy('popularity.desc')">
+          Popularidad
+        </button>
+      </div>
+      <div class="col-12 col-md">
+        <input class="form-control"
+          type="search"
+          placeholder="Search"
+          aria-label="Search"
+          [(ngModel)]="searchTerm"
+          name="searchTerm"
+          (change)="onSearchInput()" />
+      </div>
+    </div>
+  </div>
+  <!-- Spinner Bootstrap mientras carga -->
+  <div *ngIf="loading" class="d-flex justify-content-center align-items-center py-5">
+    <div class="spinner-border" role="status" aria-label="Loading"></div>
   </div>
 
+  <ng-container *ngIf="!loading">
     <nav class="d-flex justify-content-center mt-3">
-    <ul class="pagination">
-      <li class="page-item" [class.disabled]="currenntPageNumber === 1">
-        <button class="page-link" (click)="changePage(currenntPageNumber - 1)" [disabled]="currenntPageNumber === 1">Anterior</button>
-      </li>
-      <li class="page-item disabled">
-        <span class="page-link">Página {{ currentPage }}</span>
-      </li>
-      <li class="page-item">
-        <button class="page-link" (click)="changePage(currenntPageNumber + 1)">Siguiente</button>
-      </li>
-    </ul>
-  </nav>
+      <ul class="pagination">
+        <li class="page-item" [class.disabled]="currenntPageNumber === 1">
+          <button class="page-link" (click)="changePage(currenntPageNumber - 1)" [disabled]="currenntPageNumber === 1">Anterior</button>
+        </li>
+        <li class="page-item disabled">
+          <span class="page-link">Página {{ currentPage }}</span>
+        </li>
+        <li class="page-item">
+          <button class="page-link" (click)="changePage(currenntPageNumber + 1)">Siguiente</button>
+        </li>
+      </ul>
+    </nav>
 
-  <table class="table table-striped">
-    <!-- ...existing table code... -->
-    <thead>
-      <tr>
-        <th>Poster</th>
-        <th (click)="toggleSort('title')" style="cursor:pointer;">
-          Título
-          <span *ngIf="currentSort.startsWith('title')">
-            <span *ngIf="currentSort.endsWith('.asc')">&#9650;</span>
-            <span *ngIf="currentSort.endsWith('.desc')">&#9660;</span>
-          </span>
-        </th>
-        <th>Genero/s</th>
-        <th (click)="toggleSort('release_date')" style="cursor:pointer;">
-          Fecha
-          <span *ngIf="currentSort.startsWith('release_date')">
-            <span *ngIf="currentSort.endsWith('.asc')">&#9650;</span>
-            <span *ngIf="currentSort.endsWith('.desc')">&#9660;</span>
-          </span>
-        </th>
-        <th (click)="toggleSort('vote_average')" style="cursor:pointer;">
-          Rating
-          <span *ngIf="currentSort.startsWith('vote_average')">
-            <span *ngIf="currentSort.endsWith('.asc')">&#9650;</span>
-            <span *ngIf="currentSort.endsWith('.desc')">&#9660;</span>
-          </span>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let movie of movies">
-        <td>
-          <a [routerLink]="['/movie', movie.id]" class="d-block position-relative">
-            <img
-              [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
-              alt="Movie Poster"
-              class="img-fluid rounded"
-              style="height: 5rem; object-fit: cover;"
-            />
-          </a>
-        </td>
-        <td>{{ movie.title }}</td>
-        <td>
-          <ng-container *ngFor="let genre of movie.genre_ids; let last = last">
-            {{ genresMap[genre] }}<span *ngIf="!last">, </span>
-          </ng-container>
-        </td>
-        <td>{{ movie.release_date }}</td>
-        <td>{{ movie.vote_average }}</td>
-      </tr>
-    </tbody>
-  </table>
+    <!-- Tabla responsive -->
+    <div class="table-responsive">
+      <table class="table table-striped align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Poster</th>
+            <th (click)="toggleSort('title')" style="cursor:pointer;">
+              Título
+              <span *ngIf="currentSort.startsWith('title')">
+                <span *ngIf="currentSort.endsWith('.asc')">&#9650;</span>
+                <span *ngIf="currentSort.endsWith('.desc')">&#9660;</span>
+              </span>
+            </th>
+            <th>Genero/s</th>
+            <th (click)="toggleSort('release_date')" style="cursor:pointer;">
+              Fecha
+              <span *ngIf="currentSort.startsWith('release_date')">
+                <span *ngIf="currentSort.endsWith('.asc')">&#9650;</span>
+                <span *ngIf="currentSort.endsWith('.desc')">&#9660;</span>
+              </span>
+            </th>
+            <th (click)="toggleSort('vote_average')" style="cursor:pointer;">
+              Rating
+              <span *ngIf="currentSort.startsWith('vote_average')">
+                <span *ngIf="currentSort.endsWith('.asc')">&#9650;</span>
+                <span *ngIf="currentSort.endsWith('.desc')">&#9660;</span>
+              </span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let movie of movies">
+            <td>
+              <a [routerLink]="['/movie', movie.id]" class="d-block position-relative">
+                <img
+                  [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
+                  alt="Movie Poster"
+                  class="img-fluid rounded"
+                  style="height: 5rem; object-fit: cover;"
+                />
+              </a>
+            </td>
+            <td>{{ movie.title }}</td>
+            <td>
+              <ng-container *ngFor="let genre of movie.genre_ids; let last = last">
+                {{ genresMap[genre] }}<span *ngIf="!last">, </span>
+              </ng-container>
+            </td>
+            <td>{{ movie.release_date }}</td>
+            <td>{{ movie.vote_average }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-  <nav class="d-flex justify-content-center mt-3">
-    <ul class="pagination">
-      <li class="page-item" [class.disabled]="currenntPageNumber === 1">
-        <button class="page-link" (click)="changePage(currenntPageNumber - 1)" [disabled]="currenntPageNumber === 1">Anterior</button>
-      </li>
-      <li class="page-item disabled">
-        <span class="page-link">Página {{ currentPage }}</span>
-      </li>
-      <li class="page-item">
-        <button class="page-link" (click)="changePage(currenntPageNumber + 1)">Siguiente</button>
-      </li>
-    </ul>
-  </nav>
+    <nav class="d-flex justify-content-center mt-3">
+      <ul class="pagination">
+        <li class="page-item" [class.disabled]="currenntPageNumber === 1">
+          <button class="page-link" (click)="changePage(currenntPageNumber - 1)" [disabled]="currenntPageNumber === 1">Anterior</button>
+        </li>
+        <li class="page-item disabled">
+          <span class="page-link">Página {{ currentPage }}</span>
+        </li>
+        <li class="page-item">
+          <button class="page-link" (click)="changePage(currenntPageNumber + 1)">Siguiente</button>
+        </li>
+      </ul>
+    </nav>
+  </ng-container>
 </div>

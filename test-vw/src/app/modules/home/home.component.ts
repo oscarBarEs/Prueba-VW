@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MovieGridComponent } from '../movie-grid/movie-grid.component';
 import { SessionService } from '../../core/services/session.service';
-import { getPopularMovies,getTopMovies } from '../../data/api/movie-api';
+import { getPopularMovies,getTopMovies,getUpcomingMovies } from '../../data/api/movie-api';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { MoviePosterComponent } from '../movie-poster/movie-poster.component';
@@ -16,12 +16,15 @@ import { MoviePosterComponent } from '../movie-poster/movie-poster.component';
 export class HomeComponent implements OnInit {
   movieIds: string[] = [];
   topMovieIds: string[] = [];
+
   page = 1;
   maxPage = 5;
   animating = false;
   token: string | null = null;
   loading = true; // Add this
-  poster: { id: string, url: string, title: string } ={id: "", url: "", title: ""}; ;
+  poster: { id: string, url: string, title: string } ={id: "", url: "", title: ""} ;
+ 
+  posterUpcoming: { id: string, url: string, title: string }[] =[] ;
 
   posterUrl = 'https://image.tmdb.org/t/p/w500';
 
@@ -43,6 +46,7 @@ async ngOnInit() {
     await this.loadMovies();
     await this.loadTopMovies();
     await this.getPoster();
+    await this.getPosterUpcoming();
   } catch (err) {
     console.error('Error loading movies', err);
   } finally {
@@ -88,6 +92,17 @@ async ngOnInit() {
     }
 
 
+  }
+
+  async getPosterUpcoming() {
+    //Get only the 3 upcoming movies
+    if (!this.token) return;
+    const movies = await getUpcomingMovies(this.http, this.token, String(this.page));
+    this.posterUpcoming = movies.map((movie: any) => ({
+      id: movie.id,
+      url: this.posterUrl + movie.backdrop_path,
+      title: movie.title
+    })).splice(0, 3);
   }
 
   async nextPage() {

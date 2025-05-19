@@ -1,0 +1,9 @@
+a.d-block.position-relative {
+  transition: transform 0.25s cubic-bezier(.4,2,.6,1);
+  display: block;
+}
+
+a.d-block.position-relative:hover {
+  z-index: 2;
+  transform: scale(1.08);
+}

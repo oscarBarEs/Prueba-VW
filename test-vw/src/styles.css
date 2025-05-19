@@ -1,1 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
+.row{
+    --bs-gutter-x: 0rem !important;
+}
+
+body.dark-mode {
+  background-color: #181818 !important;
+  color: #f1f1f1 !important;
+}
+body.dark-mode .bg-light {
+  background-color: #232323 !important;
+  color: #f1f1f1 !important;
+}
+body.dark-mode .navbar, body.dark-mode .card {
+  background-color: #232323 !important;
+  color: #f1f1f1 !important;
+}

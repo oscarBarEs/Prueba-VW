@@ -87,3 +87,32 @@ export const getGenresMap = async (http: HttpClient, token: string): Promise<{ [
   }, {});
 };
 
+export const getUpcomingMovies = async (
+  http: HttpClient,
+  token: string,
+  page: string = '1'
+): Promise<any[]> => {
+  const url = `https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=${page}`;
+  const headers = new HttpHeaders({
+    'Authorization': token,
+    'accept': 'application/json'
+  });
+  const response: any = await http.get(url, { headers }).toPromise();
+  return response?.results ?? [];
+};
+
+export const searchMovies = async (
+  http: HttpClient,
+  token: string,
+  query: string,
+  year: string,
+  page: string = '1'
+): Promise<any[]> => {
+  const url = `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(query)}&include_adult=false&language=en-US&primary_release_year=${year}&page=${page}`;
+  const headers = new HttpHeaders({
+    'Authorization': token,
+    'accept': 'application/json'
+  });
+  const response: any = await http.get(url, { headers }).toPromise();
+  return response?.results ?? [];
+};
