@@ -8,6 +8,9 @@
 
 ---
 
+ ![Page Look](test-vw/src/assets/gifs/FullPage.gif)
+
+
 ## 📖 Project Overview
 
 This is a responsive Angular application created as part of the **VW DIGITAL:HUB Frontend Technical Test**. The app is a movie browser that interacts with the [TMDb API](https://www.themoviedb.org/documentation/api), allowing users to **list**, **search**, **sort**, **view**, and **interact** with movie data.
@@ -88,14 +91,14 @@ The app is structured using standalone components and modular separation of conc
 
 ### 🏠 Home Page
 
-> ![Home Page](src/assets/images/Home.png)
+> ![Home Page](test-vw/src/assets/images/Home.png)
 
 ### 🎞 Movie Detail View
 
-> ![Home Page](src/assets/images/DetailView.png)
+> ![Home Page](test-vw/src/assets/images/DetailView.png)
 
 ### 📊 Data Table 
-> ![Home Page](src/assets/images/DataTable.png)
+> ![Home Page](test-vw/src/assets/images/DataTable.png)
 
 ---
 
