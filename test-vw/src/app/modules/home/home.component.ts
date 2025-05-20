@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit {
   topMovieIds: string[] = [];
 
   page = 1;
-  maxPage = 5;
+  maxPage = 3;
   animating = false;
   token: string | null = null;
   loading = true; // Add this

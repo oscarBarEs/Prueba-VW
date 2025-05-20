@@ -23,21 +23,31 @@ export class HeaderComponent  implements OnInit{
   constructor(private session: SessionService, private http: HttpClient, private router: Router) {}
 
 async ngOnInit() {
-  const theme = localStorage.getItem('theme');
+  let theme = 'dark';
+  const isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
+  if (isBrowser && window.localStorage) {
+    theme = localStorage.getItem('theme') || 'dark';
+  }
   this.isDarkMode = theme === 'dark';
-  const html = document.documentElement;
-  html.setAttribute('data-bs-theme', this.isDarkMode ? 'dark' : 'light');
-    this.token = await this.session.getToken();
-    if (!this.token) {return};  this.token = this.session.getToken(); // Esto es síncrono
-}
-
-  toggleTheme() {
-    this.isDarkMode = !this.isDarkMode;
+  if (isBrowser) {
     const html = document.documentElement;
     html.setAttribute('data-bs-theme', this.isDarkMode ? 'dark' : 'light');
-    localStorage.setItem('theme', this.isDarkMode ? 'dark' : 'light');
   }
+  this.token = await this.session.getToken();
+  if (!this.token) { return; }
+}
 
+toggleTheme() {
+  this.isDarkMode = !this.isDarkMode;
+  const isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
+  if (isBrowser) {
+    const html = document.documentElement;
+    html.setAttribute('data-bs-theme', this.isDarkMode ? 'dark' : 'light');
+    if (window.localStorage) {
+      localStorage.setItem('theme', this.isDarkMode ? 'dark' : 'light');
+    }
+  }
+}
   async onSearchInput() {
     if (!this.token || !this.searchTerm.trim()) {
       this.searchResults = [];
