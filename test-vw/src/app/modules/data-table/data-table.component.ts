@@ -18,7 +18,7 @@ export class DataTableComponent implements OnInit {
   currentSort: string = 'popularity.desc';
   token: string | null = null;
   currentPage = "1";
-  currenntPageNumber = 1;
+  currenntPageNumber:number = 1;
   searchByYear: string = '';
   voteAverageGte: string = '';
   voteAverageLte: string = '';
